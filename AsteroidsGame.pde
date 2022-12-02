@@ -26,7 +26,7 @@ public void draw()
   asteroidsArray.get(i).show();
   asteroidsArray.get(i).move();
   float d = dist(asteroidsArray.get(i).getMyX(), asteroidsArray.get(i).getMyY(), ship.getMyX(), ship.getMyY());{
-      if (d< 1){asteroidsArray.remove(i);}
+      if (d< 15){asteroidsArray.remove(i);}
     }
   }
   ship.show();
