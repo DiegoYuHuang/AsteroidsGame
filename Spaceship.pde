@@ -1,46 +1,79 @@
-class Spaceship extends Floater  
-{  
-   public Spaceship() {
-   corners = 4;
-   xCorners = new int[] {-8, -2, -8, 16};
-   //xCorners = new int[] {}; can use this too
-   yCorners = new int[] {-8, 0, 8, 0};
-   myColor = 255;
-   myCenterX = 250;
-   myCenterY = 250;
-   myXspeed = 0;
-   myYspeed = 0;
-   }
-   
-   public void setXspeed(double x){
-     myXspeed = x;
-   }
-   public void setYspeed(double y){
-     myYspeed = y;
-   }
-   public void setDirection(double d){
-     myPointDirection = d;
-   }
-   public void setCenterX(float c){
-     myCenterX = c;
-   }
-   public void setCenterY(float y){
-     myCenterY = y;
-   }
-   
-  public float getMyX(){
-    return myCenterX;
+Star[] nightsky = new Star[200];
+Spaceship ship = new Spaceship();
+//Bullet bob = new Bullet(ship);
+ArrayList<Asteroid> asteroidsArray = new ArrayList<Asteroid>();
+ArrayList<Bullet> shots = new ArrayList<Bullet>();
+
+public void setup()
+{
+  size(500,500);
+  for(int i=0; i<nightsky.length; i++){
+    nightsky[i] = new Star();
   }
-  public float getMyY(){
-    return myCenterY;
+  for(int i=0; i<10; i++){
+    Asteroid bob = new Asteroid();
+    asteroidsArray.add(bob);
+  } 
+}
+
+public void draw()
+{
+  background(0);
+  for(int i=0; i<nightsky.length; i++){
+    nightsky[i].show();
   }
-  public double getMyXspeed(){
-    return myXspeed;
+  for (int i=0; i<asteroidsArray.size();i++){
+  asteroidsArray.get(i).show();
+  asteroidsArray.get(i).move();
+  float d = dist(asteroidsArray.get(i).getMyX(), asteroidsArray.get(i).getMyY(), ship.getMyX(), ship.getMyY());{
+      if (d< 15){asteroidsArray.remove(i);}
+    }
   }
-  public double getMyYspeed(){
-    return myXspeed;
+  ship.show();
+  ship.move();
+  for(int i=0; i<shots.size();i++){
+    shots.get(i).move();
+    shots.get(i).show();
   }
-  public double getMyPointDirection(){
-    return myPointDirection;
+  
+  for(int i=0; i<shots.size();i++){
+    for (int j=0; j<asteroidsArray.size();j++){
+        float d = dist(asteroidsArray.get(j).getMyX(), asteroidsArray.get(j).getMyY(), shots.get(i).getMyX(), shots.get(i).getMyY());{
+          if (d< 15){
+          asteroidsArray.remove(j);
+          shots.remove(i);
+          break;
+        }
+      }
+    }
   }
+}
+
+public void keyPressed(){
+   if (key == 'h')
+  {
+    ship.setXspeed(0);
+    ship.setYspeed(0);
+    ship.setDirection((double)(Math.random()*360));
+    ship.setCenterX((float)(Math.random()*500));
+    ship.setCenterY((float)(Math.random()*500));
+  }
+  if (key == 'w')
+  {
+    ship.accelerate(0.2);
+  }
+  if (key == 's')
+  {
+    ship.accelerate(-0.2); 
+  }
+  if (key == 'a')
+  {
+   ship.turn(-10); 
+  }
+  if (key == 'd')
+  {
+   ship.turn(10); 
+  }
+  else if(key == ' ')
+    shots.add(new Bullet(ship));
 }
